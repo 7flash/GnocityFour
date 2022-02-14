@@ -1278,24 +1278,14 @@ function stackTrace() {
 }
 
 function _Authorize() {
- console.log("AUTHORIZE");
- createUnityInstance(canvas, config, progress => {
-  progressBarFull.style.width = 100 * progress + "%";
- }).then(async (unityInstance) => {
-    const loginUrl = `${window.location.href}authorize.html`;
-
-    const loginPopup = await window.open(loginUrl, "AuthorizePopup", "height=1,width=1");
-    
-    loginPopup.addEventListener("message", function(event) {
-        const accountName = event.data.userAccount;
-
-        if (!accountName) return;
-
-        loginPopup.close();
-
-        unityInstance.SendMessage("GnomeAuthorizationCanvas", "CompleteAuth", accountName);
-    }, false)
- });
+ const loginUrl = `${window.location.href}authorize.html`;
+ const loginPopup = window.open(loginUrl, "AuthorizePopup", "height=1,width=1");
+ loginPopup.addEventListener("message", function(event) {
+  const accountName = event.data.userAccount;
+  if (!accountName) return;
+  loginPopup.close();
+  unityInstance.SendMessage("GnomeAuthorizationCanvas", "CompleteAuth", accountName);
+ }, false);
 }
 
 var JS_Accelerometer = null;
