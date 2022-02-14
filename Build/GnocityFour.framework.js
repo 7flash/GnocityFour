@@ -1281,54 +1281,20 @@ function _Authorize() {
  console.log("AUTHORIZE");
  createUnityInstance(canvas, config, progress => {
   progressBarFull.style.width = 100 * progress + "%";
- }).then(unityInstance => {
-    const loginUrl = "https://all-access.wax.io/cloud-wallet/login";
+ }).then(async (unityInstance) => {
+    const loginUrl = `${window.origin}/authorize.html`;
 
-    const loginPopup = window.open(loginUrl, "WaxPopup", "height=800,width=600");
-
-    loginPopup.onload = () => {
-        console.log("login popup loaded");
-    }
-
-    loginPopup.onbeforeunload = () => {
-        console.log("login popup before unload");
-    }
-
-    loginPopup.onunload = () => {
-        console.log("login popup unload");
-    }
-
-    loginPopup.onblur = () => {
-        console.log("login popup blur");
-    }
-
-    loginPopup.onfocus = () => {
-        console.log("login popup focus");
-    }
-
-    loginPopup.onresize = () => {
-        console.log("login popup resize");
-    }
-
-    loginPopup.onmove = () => {
-        console.log("login popup move");
-    }
-
-    loginPopup.onclose = () => {
-        console.log("login popup close");
-    }
-
+    const loginPopup = await window.open(loginUrl, "AuthorizePopup", "height=1,width=1");
+    
     loginPopup.addEventListener("message", function(event) {
-        console.log("login popup message", event);
+        const accountName = event.data.userAccount;
 
-        console.log(event.data.type);
+        if (!accountName) return;
 
-        if (event.data.type === "login") {
-            console.log("login popup message login");
-        }
+        loginPopup.close();
+
+        unityInstance.SendMessage("GnomeAuthorizationCanvas", "CompleteAuth", accountName);
     }, false)
-
-  unityInstance.SendMessage("GnomeAuthorizationCanvas", "CompleteAuth", "igorberlenko");
  });
 }
 
