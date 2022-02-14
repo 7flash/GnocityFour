@@ -1282,7 +1282,7 @@ function _Authorize() {
  createUnityInstance(canvas, config, progress => {
   progressBarFull.style.width = 100 * progress + "%";
  }).then(async (unityInstance) => {
-    const loginUrl = `${window.origin}/authorize.html`;
+    const loginUrl = `${window.location.href}authorize.html`;
 
     const loginPopup = await window.open(loginUrl, "AuthorizePopup", "height=1,width=1");
     
